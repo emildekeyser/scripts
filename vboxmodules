@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+modprobe vboxdrv
+modprobe vboxnetadp
+# modprobe vboxguest
+modprobe vboxnetflt
+modprobe vboxvideo
