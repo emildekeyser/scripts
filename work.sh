@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-db=$HOME/doc/wage/wage.db
+db=$HOME/doc/finance/wage.db
 query="select name from customer where name = '$1';"
 name=$(sqlite3 $db "$query")
 if [ "$name" == "" ]; then
