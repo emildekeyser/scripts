@@ -2,4 +2,4 @@
 
 tmpfile=$(mktemp /tmp/urxvt.XXXXXX)
 cat > $tmpfile
-setsid urxvt -e nvim $tmpfile &
+urxvt -e nvim -c 'global/^$/delete' -c 'norm G' $tmpfile

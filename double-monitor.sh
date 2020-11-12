@@ -1,12 +1,7 @@
 #!/usr/bin/env sh
 
-#xrandr --auto
-#xrandr --output VGA-0 --off
-#xrandr --output LVDS-1-1 --primary 
-if mons | grep -q HDMI; then
-	mons -S '0,2:R'
-else
-	mons -S '0,1:R'
-fi
-feh --bg-fill $(<~/.cache/wal/wal)
-~/project/scripts/bar.sh
+monitors=$(xrandr | grep ' connected ' | cut -d' ' -f1 | grep -v LVDS1)
+[ $(echo $monitors | grep . | wc -l) == 1 ] && \
+    xrandr --output $monitors --right-of LVDS1 --auto
+
+bar
