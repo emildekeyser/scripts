@@ -4,7 +4,7 @@ if [[ $1 = -R ]]
 then
     wal -R
     source ~/.cache/wal/colors.sh
-    bgs -R -C $color7 ~/.cache/wal/generated.png
+    bgs -R -C $color7 ~/.cache/wal/generated-wal1.png
     exit
 fi
 
@@ -41,6 +41,6 @@ fi
 source ~/.cache/wal/colors.sh
 
 sed "s/green/$color7/ ; s/black/$color1/" ~/.config/wal/wallpaper-template.svg \
- | convert - ~/.cache/wal/generated.png
+ | convert - ~/.cache/wal/generated-wal1.png
 
-bgs -R -C $color7 ~/.cache/wal/generated.png
+bgs -R -C $color7 ~/.cache/wal/generated-wal1.png

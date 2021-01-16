@@ -14,7 +14,7 @@ case "$1" in
         # notify-send "mailto"
         echo "$1" > ~/tmp/mail.txt
         ;;
-	*mkv|*webm|*mp4|*youtube.com/watch*|*youtube.com/playlist*|*youtu.be*|*hooktube.com*|*bitchute.com*)
+	*mkv|*webm|*mp4|*youtube.com/watch*|*youtube.com/playlist*|*youtu.be*|*hooktube.com*|*bitchute.com*|*videos.lukesmith.xyz*)
 		setsid mpv $YTFORMAT --input-ipc-server=/tmp/mpvsoc$(date +%s) -quiet "$1" >/dev/null 2>&1 &
         ;;
 	*png|*jpg|*jpe|*jpeg|*gif)

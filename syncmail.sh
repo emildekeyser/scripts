@@ -11,4 +11,4 @@ echo ===[mbsync]===
 mbsync -V -a -c /home/user1/.config/mbsyncrc
 
 echo ===[notmuch]===
-notmuch new
+notmuch new 2>&1 | grep -v '^Note: Ignoring non-mail file:' 

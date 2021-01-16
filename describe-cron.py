@@ -1,10 +1,12 @@
 #!/bin/python
 
 import cron_descriptor
-import sys
+import fileinput
 
-try:
-    args = " ".join(sys.argv[1:])
-    print(cron_descriptor.get_description(args))
-except Exception as e:
-    print(e)
+for line in fileinput.input():
+    line = line.strip("\n")
+    try:
+        print(cron_descriptor.get_description(line))
+    except Exception as e:
+        print(e)
+

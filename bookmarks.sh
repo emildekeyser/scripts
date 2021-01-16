@@ -1,6 +1,6 @@
 #!/bin/bash
 
-menu=${1:-fzf}
-path=$HOME/.local/bookmarks/unsorted/bookmarks/sorted
-url=$(find $path -type f | sed "s:^$path/::" | $menu)
-[ ! -z $url ] && brave "$(cat $path/$url)"
+menu=${@:-dmenu -geometry 150x40}
+path=$HOME/.local/bookmarks
+url=$(find $path -mindepth 1 | sed "s:^$path/::" | $menu)
+[ ! -z "$url" ] && $BROWSER "$(cat $path/$url)"
