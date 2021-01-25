@@ -16,4 +16,4 @@
 
 exec 2>/dev/null
 
-urxvt $@ -title floater -e sh -c "fzf < /proc/$$/fd/0 > /proc/$$/fd/1"
+$TERMINAL "$@" -t floater -e zsh -c "[[ -r ~/.cache/wal/sequences ]] && cat ~/.cache/wal/sequences; fzf < /proc/$$/fd/0 > /proc/$$/fd/1"
