@@ -1,0 +1,69 @@
+#!/bin/bash
+
+[ $# == 0 ] && echo common or unique ?
+
+[[ "$@" == *"common"* ]] && \
+    borg create \
+        --show-rc \
+        --progress \
+        --compression auto,zstd,22 /data/backup::'common-{now}'  \
+        $HOME/doc \
+        $HOME/pic \
+        $HOME/project \
+        $HOME/tmp \
+        $HOME/vid \
+        $HOME/ucll \
+        $HOME/music \
+        $HOME/.android \
+        $HOME/.config \
+        $HOME/.local/bin \
+        $HOME/.local/bookmarks \
+        $HOME/.local/calendars \
+        $HOME/.local/history \
+        $HOME/.local/people \
+        $HOME/.local/repo \
+        $HOME/.local/share \
+        $HOME/.local/templates \
+        $HOME/.local/unison/default.prf \
+        $HOME/.local/zr \
+        $HOME/.trello-cli \
+        $HOME/.ssh \
+        $HOME/.zprofile \
+        $HOME/.zshenv \
+        $HOME/.zshrc \
+    && \
+    borg prune                          \
+        --list                          \
+        --prefix 'common-'          \
+        --show-rc                       \
+        --keep-daily    7               \
+        --keep-weekly   4               \
+        --keep-monthly  6               \
+        /data/backup
+
+common_exit="Common exit: $?"
+
+
+[[ "$@" == *"unique"* ]] && \
+    borg create \
+        --show-rc \
+        --progress \
+        --compression auto,zstd,22 /data/backup::'{hostname}-{now}' \
+        $HOME/.local/log \
+        $HOME/.local/unison \
+        $HOME/.local/unique \
+    && \
+    borg prune                          \
+        --list                          \
+        --prefix '{hostname}-'          \
+        --show-rc                       \
+        --keep-daily    7               \
+        --keep-weekly   4               \
+        --keep-monthly  6               \
+        /data/backup
+
+uniq_exit="Unique exit: $?"
+
+trash-empty
+
+echo $common_exit $uniq_exit >> $HOME/.local/log/masterlog

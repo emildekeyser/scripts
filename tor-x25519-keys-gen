@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+import base64
+import argparse
+import nacl.public
+
+def args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("username", help="used for just filenames")
+    parser.add_argument("onion", help="56 char onion addr without .onion part")
+    args = parser.parse_args()
+    return args.username, args.onion
+
+def key_str(key):
+    # bytes to base 32
+    key_bytes = bytes(key)
+    key_b32 = base64.b32encode(key_bytes)
+    # strip trailing ====
+    assert key_b32[-4:] == b'===='
+    key_b32 = key_b32[:-4]
+    # change from b'ASDF' to ASDF
+    s = key_b32.decode('utf-8')
+    return s
+
+
+def main():
+    (username, onion) = args()
+
+    priv_key = nacl.public.PrivateKey.generate()
+    pub_key = priv_key.public_key
+    priv_key = key_str(priv_key)
+    pub_key = key_str(pub_key)
+
+    open(f"{username}.auth", "w").write(f"descriptor:x25519:{pub_key}")
+    open(f"{username}.auth_private", "w").write(f"{onion}:descriptor:x25519:{priv_key}")
+
+
+if __name__ == '__main__':
+    exit(main())

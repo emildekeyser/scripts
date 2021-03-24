@@ -1,0 +1,5 @@
+#!/bin/bash
+
+nmcli device status \
+    | grep ' connected' \
+    | grep -o wlan0

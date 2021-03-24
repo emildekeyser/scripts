@@ -1,0 +1,12 @@
+#!/bin/bash
+
+youtube-dl --download-archive archive.txt \
+	--keep-video --extract-audio \
+	--write-description \
+    --write-thumbnail \
+    --embed-thumbnail \
+    --add-metadata \
+    --xattrs \
+	--ignore-errors \
+	-o '%(upload_date)s-%(title)s-%(id)s.%(ext)s' \
+	"$1"

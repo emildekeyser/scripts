@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo ===[mbsync]===
+mbsync $@ -a -c /home/user1/.config/mbsyncrc
+
+echo ===[notmuch]===
+out=$(notmuch new 2>&1 | grep -v '^Note: Ignoring non-mail file:')
+echo $out
+
+grep -q 'No new mail.' <<< $out \
+    || echo $out >> $HOME/.local/log/masterlog

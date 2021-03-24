@@ -7,12 +7,12 @@ reload wm
 restart wm
 "
 
-if [[ $(hostname) == machine1 ]]
+if [[ $HOST == machine1 ]]
 then
     options="shutdown\n$options"
 fi
 
-action=$(printf "$options" | dmenu -l 7)
+action=$(printf "$options" | dmenu)
 [ -z "$action" ] && exit
 
 case "$action" in

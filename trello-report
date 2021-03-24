@@ -1,0 +1,25 @@
+#!/usr/bin/zsh
+
+seds () {
+	sed 's/'$1'/'$2'/g'
+}
+
+removeescapes () {
+    sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
+}
+
+exec 2>/dev/null
+
+trello refresh
+trello show-cards -b mrt \
+	| grep '^\*' \
+	| cut -d' ' -f2 \
+	| xargs -l1 trello card-details \
+    | grep -v "You are subscribed to this card." \
+	| tr "\n" "\t" \
+	| seds "\t" " :: " \
+	| seds "Trello workspace" "\n&" \
+	| removeescapes \
+	| grep emil \
+	| seds " :: $" "" \
+    | xclip -filter -rmlastnl -selection "clipboard"

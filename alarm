@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+soundfile=$HOME/music/stuka.m4a
+cmd="mpv --audio-display=no --loop=inf --volume=300 $soundfile"
+
+if [[ "$@" == "" ]]
+then
+    echo $cmd | at 07:00
+else
+    echo $cmd | at $@
+fi
+

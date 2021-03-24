@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+source="yay -Qie"
+test -t 0 || source=cat # if stdin open, use it
+
+$source | grep -P '^Name|^Description|^Required' | sed -e 's/Name *: //' -e 's/Description *: /= /' | paste - - - | tr -s '\t' ' '

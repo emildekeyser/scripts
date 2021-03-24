@@ -1,0 +1,5 @@
+#!/bin/bash
+ 
+ln -fs /etc/runit/sv/sshd /run/runit/service/
+ln -fs /etc/runit/sv/rsyncd-home /run/runit/service/
+ln -fs /etc/runit/sv/unison /run/runit/service/
