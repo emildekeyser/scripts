@@ -36,7 +36,7 @@ else
     wal --theme $theme
 fi
 
-~/project/scripts/pywal-zathura-colors.sh > ~/.cache/wal/colors-zathura
+pywal-zathura-colors > ~/.cache/wal/colors-zathura
 
 source ~/.cache/wal/colors.sh
 

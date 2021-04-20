@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cat \
+    <(find -mindepth 1 -maxdepth 1 -type d | xargs -i find {} -type f) \
+    <(find -mindepth 1 -maxdepth 1 -type d | xargs -i find {} -type l) \
+    <(find -maxdepth 1 -type f) \
+    <(find -maxdepth 1 -type l -printf '%Y%p\n' |grep -E '^f'|cut --characters=2-)

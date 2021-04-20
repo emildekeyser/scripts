@@ -24,9 +24,7 @@
         $HOME/.local/repo \
         $HOME/.local/share \
         $HOME/.local/templates \
-        $HOME/.local/unison/default.prf \
-        $HOME/.local/zr \
-        $HOME/.trello-cli \
+        $HOME/.local/unison/*.prf \
         $HOME/.ssh \
         $HOME/.zprofile \
         $HOME/.zshenv \
