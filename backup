@@ -1,12 +1,18 @@
 #!/bin/bash
 
+exec 1>> $HOME/.local/log/borg 2>&1
+
 [ $# == 0 ] && echo common or unique ?
 
-[[ "$@" == *"common"* ]] && \
+if [[ "$@" == *"common"* ]]
+then
+    echo ==[Starting common]==
+
     borg create \
         --show-rc \
         --progress \
-        --compression auto,zstd,22 /data/backup::'common-{now}'  \
+        --compression auto,zstd,22 \
+        /data/backup::'common-{now}'  \
         $HOME/doc \
         $HOME/pic \
         $HOME/project \
@@ -28,10 +34,11 @@
         $HOME/.ssh \
         $HOME/.zprofile \
         $HOME/.zshenv \
-        $HOME/.zshrc \
-    && \
+        $HOME/.zshrc
+
+    common_create_exit="Common create exit: $?"
+
     borg prune                          \
-        --list                          \
         --prefix 'common-'          \
         --show-rc                       \
         --keep-daily    7               \
@@ -39,20 +46,26 @@
         --keep-monthly  6               \
         /data/backup
 
-common_exit="Common exit: $?"
+    common_prune_exit="Common prune exit: $?"
 
+fi
 
-[[ "$@" == *"unique"* ]] && \
+if [[ "$@" == *"unique"* ]]
+then
+    echo ==[Starting unique]==
+
     borg create \
         --show-rc \
         --progress \
-        --compression auto,zstd,22 /data/backup::'{hostname}-{now}' \
+        --compression auto,zstd,22 \
+        /data/backup::'{hostname}-{now}' \
         $HOME/.local/log \
         $HOME/.local/unison \
-        $HOME/.local/unique \
-    && \
-    borg prune                          \
-        --list                          \
+        $HOME/.local/unique
+
+    unique_create_exit="Unique create exit: $?"
+
+    borg prune \
         --prefix '{hostname}-'          \
         --show-rc                       \
         --keep-daily    7               \
@@ -60,8 +73,10 @@ common_exit="Common exit: $?"
         --keep-monthly  6               \
         /data/backup
 
-uniq_exit="Unique exit: $?"
+    unique_prune_exit="Unique prune exit: $?"
+
+fi
 
 trash-empty
 
-echo $common_exit $uniq_exit >> $HOME/.local/log/masterlog
+echo -e "$common_create_exit\n$common_prune_exit\n$unique_create_exit\n$unique_prune_exit" >> $HOME/.local/log/masterlog

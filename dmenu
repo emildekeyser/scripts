@@ -15,5 +15,5 @@
 # cat $outpipe
 
 exec 2>/dev/null
-
-$TERMINAL "$@" -t floater -e zsh -c "[[ -r ~/.cache/wal/sequences ]] && cat ~/.cache/wal/sequences; fzf $FZF_OPTIONS < /proc/$$/fd/0 > /proc/$$/fd/1"
+TERMINAL_OPTIONS=${TERMINAL_OPTIONS:--t floater}
+$TERMINAL $TERMINAL_OPTIONS -e zsh -c "[[ -r ~/.cache/wal/sequences ]] && cat ~/.cache/wal/sequences; fzf $FZF_OPTIONS < /proc/$$/fd/0 > /proc/$$/fd/1"

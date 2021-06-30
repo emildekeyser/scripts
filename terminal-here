@@ -1,3 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
-xdotool getactivewindow getwindowpid | xargs pgrep -P | xargs pwdx |  cut -d' '  -f2- | xargs -IX $TERMINAL -d "X"
+dir="$(xdotool getactivewindow getwindowpid | xargs pgrep -P | xargs pwdx |  cut -d' '  -f2-)"
+(cd "$dir"; $TERMINAL)

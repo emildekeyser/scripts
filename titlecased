@@ -1,0 +1,5 @@
+#!/bin/python
+
+import fileinput
+
+print("".join([line.title() for line in fileinput.input()]), end="")

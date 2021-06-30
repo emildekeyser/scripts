@@ -1,6 +1,26 @@
 #!/bin/bash
 
-menu=${@:-dmenu -g 130x30}
-path=$HOME/.local/bookmarks
-url=$(find $path -mindepth 1 | sed "s:^$path/::" | $menu)
-[ ! -z "$url" ] && $BROWSER "$(cat $path/$url)"
+menucmd=${@:-dmenu}
+path=$HOME/.local/bookmarks/
+histpath="$HOME/.local/history/fzf/bookmarks"
+fzfopts="--history=$histpath"
+fzfopts+=" --query='$(tail -1 $histpath 2>/dev/null || echo start of history)'"
+fzfopts+=" --ansi -0 --multi"
+termopts='-t fullscreen -f fixedsysexcelsior:pixelsize=25:antialias=true:autohint=true'
+
+function genlist()
+{
+    GREP_COLORS='fn=01;32:mt=01;34' \
+    grep --color=always -Zr . $path \
+	| sed -re "s:(^.*)$path:\1:" \
+        -e 's/\x0/\x0 :: \x0/'
+}
+
+url=$(
+    genlist \
+    | TERMINAL_OPTIONS="$termopts" FZF_OPTIONS="$fzfopts" $menucmd \
+	| cut --delimiter='' -f3 \
+	| tr "\n" " "
+)
+
+[[ -z "$url" ]] || $BROWSER $url

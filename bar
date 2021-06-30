@@ -18,8 +18,6 @@ else
 	args="--config=$conf --log=error"
 
 	pkill polybar
-    # check if i3 socket exists
-    until [[ -S $(ls /run/user/1000/i3/ipc-socket.*) ]] ; do : ; done
 	for m in $(polybar --list-monitors | cut -d":" -f1); do
 	    # MONITOR=$m polybar $args invisible-dummy >> $log 2>&1 & 
 	    MONITOR=$m polybar $args simple-bar >> $log 2>&1 & 

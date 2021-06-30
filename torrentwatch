@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+inotifywait -qm -e 'moved_to,create' --format '%w%f%0' --no-newline ~/download/torrent/torrentfiles |\
+    while IFS= read -r -d '' t
+    do
+        echo Adding "$t"
+        btcli -d ~/.local/unique/btpd \
+            add -d ~/download/torrent/data "$t"
+    done

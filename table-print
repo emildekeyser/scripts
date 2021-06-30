@@ -1,0 +1,30 @@
+#!/bin/python
+
+import sys
+import subprocess
+
+cols = subprocess \
+    .run(["tput", "cols"], text=True, capture_output=True) \
+    .stdout
+
+columns = int(cols) - 2 # fzf left bar
+losttoborders = 5 * 3 + 2 * 2
+losttofixed = 4
+dyn = columns - losttoborders - losttofixed
+large = int(dyn * .25 // 1)
+verylarge = int(dyn * .40 // 1)
+small = int(dyn * .1 // 1)
+
+widths = [large, verylarge, large, small, 4]
+
+for line in sys.stdin:
+    tokens = line.rstrip("\n").split("\t")
+
+    visual = tokens[:len(widths)]
+    visualalign = [f"{t: <{w}.{w}}" for w, t in zip(widths, visual)]
+    visualstr = "| " + " | ".join(visualalign) + " |"
+
+    data = tokens[len(widths):]
+    datastr = "\t" + "\t".join(data)
+
+    print(visualstr + datastr)

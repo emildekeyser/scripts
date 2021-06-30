@@ -1,0 +1,4 @@
+#!/bin/bash
+
+STARTUPRUNCMD="nvim $@ ; exit" \
+    st -t floater

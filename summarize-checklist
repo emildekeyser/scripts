@@ -1,0 +1,34 @@
+#!/bin/zsh
+
+summarize() {
+    pandoc --to=html \
+    | pup 'input[type="checkbox"]' \
+    | ( tee >(pup 'input[type="checkbox"][checked]' | wc -l | sed 's/^/a:/') \
+        | wc -l | sed 's/^/b:/'
+    ) | sort \
+    | tr -d "\n" \
+    | sed -e 's/a://' -e 's/b:/ /' -e 's/$/\n/'
+}
+
+A=0
+B=0
+
+find ~/project/me/notes -type f -name '*\.md' \
+| while {read f} {#(
+
+    summarize < $f 2>/dev/null | read a b
+
+    grep -q '00' <<< "$a$b" || {
+        echo -n "$f :: "
+        echo "$a/$b"
+
+        let "A += $a"
+        let "B += $b"
+    }
+
+}
+# ) &}
+
+# wait
+
+echo "total :: $A/$B"

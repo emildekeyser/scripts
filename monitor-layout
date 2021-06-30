@@ -1,0 +1,7 @@
+#!/bin/bash
+
+gwmac=$(ip neigh | grep "$(\ip route show match 0/0 | cut -d' ' -f3) " | cut -d' ' -f5 | uniq)
+mons=$(xrandr --listactivemonitors | cut -d ' ' -f3 | xargs |tr -d ' ')
+shaid=$(echo $gwmac$(hostname) | sha256sum)
+
+echo $mons$shaid | tr -cd '[:alnum:]'
