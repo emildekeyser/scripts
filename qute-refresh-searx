@@ -1,0 +1,12 @@
+#!/bin/python
+
+# "open $url" >> "$QUTE_FIFO"
+
+import urllib.parse
+import os
+
+shitter_url = urllib.parse.urlparse(os.environ["QUTE_URL"])
+good_url = shitter_url._replace(scheme='http', netloc="localhost:8085", path="search")
+cmd = "open " + urllib.parse.urlunparse(good_url)
+
+open(os.environ["QUTE_FIFO"], "w").write(cmd)

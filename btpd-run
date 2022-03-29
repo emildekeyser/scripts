@@ -1,0 +1,3 @@
+#!/bin/bash
+
+btpd --logfile $HOME/.local/log/btpd -d $HOME/.local/unique/btpd

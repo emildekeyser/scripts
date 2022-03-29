@@ -1,0 +1,83 @@
+#!/usr/bin/env hy
+
+(import
+    pprint
+    os
+    hashlib
+    subprocess)
+
+(setv GB (pow 10 9))
+(setv DBNAME "sync.db")
+(setv SYNCLIST (os.path.expanduser "~/.local/unison/music-files"))
+
+(defn subproc [args]
+    (->
+        (subprocess.run args :text True :capture_output True)
+        (. stdout)
+        (.splitlines)))
+
+(defn lines [path]
+    (.readlines (open path "r")))
+
+(defn writelines [path lines]
+    (.writelines (open path "w") lines))
+
+(defn pls-names [db]
+    (lfor line (lines db) (cut line 0 -5))) ; len .m3u\n = 5
+
+(defn pls-bytes [pls]
+    (print "Listing:" pls)
+    (->>
+        ["beet" "list" (+ "playlist:" pls) "-f" "$filesize"]
+        subproc
+        (map int)
+        sum))
+
+(defn pls-path [pls]
+    (os.path.expanduser (+ "~/music/library/pls/" pls ".m3u")))
+
+(defn checksum [path]
+    (-> (open path "rb") .read hashlib.sha3_512 .hexdigest))
+
+(defn db-gen [names]
+    (lfor pls names [pls
+                     (-> pls pls-bytes (/ GB))
+                     (-> pls pls-path checksum)]))
+
+(defn db-write [memdb dbpath]
+    (writelines dbpath
+        (lfor record memdb
+              (+ (->> record
+                    (map str)
+                    (.join "\t")) "\n"))))
+
+
+(defn db-make []
+    (-> (pls-names "sync.txt") db-gen (db-write DBNAME)))
+
+(defn db-read [db]
+        (lfor line (lines db)
+              (do (setv [n s c] (.split line "\t"))
+                  [n (float s) (.strip c)])))
+
+(defn total [db]
+    (sum (lfor rec db (get rec 1))))
+
+(defn synclist-gen [db]
+    (->>
+        (lfor rec db
+          (->
+            (get rec 0)
+            pls-path
+            lines))
+        flatten
+        (map (fn [path]
+             (->>
+                 (cut path 6) ; /data/
+                 (+ "path="))))
+        list))
+
+(defn synclist-make []
+    (->> (db-read DBNAME) synclist-gen (writelines SYNCLIST)))
+
+(synclist-make)

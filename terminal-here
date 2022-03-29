@@ -1,4 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
-dir="$(xdotool getactivewindow getwindowpid | xargs pgrep -P | xargs pwdx |  cut -d' '  -f2-)"
-(cd "$dir"; $TERMINAL)
+dir="$(xdotool getactivewindow getwindowpid | xargs pgrep -P | xargs pwdx | cut -d' '  -f2-)"
+
+# dir="$(\
+#     xdotool getactivewindow getwindowpid \
+#     | xargs pgrep -P \
+#     | xargs -I{} grep {} <(tmux list-clients -F '#{pane_pid} #{client_pid}') \
+#     | cut -d ' ' -f1 \
+#     | xargs pwdx \
+#     | cut -d' '  -f2-\
+# )"
+
+dir=${dir:-$HOME}
+
+# exec $TERMINAL sh -c "cat ~/.cache/wal/sequences; exec tmux new-session -c $dir"
+
+cd "$dir"
+exec $TERMINAL

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-exec 1>> $HOME/.local/log/borg 2>&1
-
 [ $# == 0 ] && echo common or unique ?
+
+exec 1>> $HOME/.local/log/borg 2>&1
 
 if [[ "$@" == *"common"* ]]
 then
@@ -77,6 +77,6 @@ then
 
 fi
 
-trash-empty
+trash-empty -f
 
 echo -e "$common_create_exit\n$common_prune_exit\n$unique_create_exit\n$unique_prune_exit" >> $HOME/.local/log/masterlog

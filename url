@@ -1,0 +1,52 @@
+#!/bin/zsh
+
+bookmarkpath=$HOME/.local/bookmarks/
+menucmd="fzf --ansi --multi --print-query --expect=alt-enter"
+# termopts='-t fullscreen -f fixedsysexcelsior:pixelsize=25:antialias=true:autohint=true'
+termopts='-t fullscreen'
+
+[[ "$@" == *"--history"* ]] && {
+    alsohist="list-history"
+    menucmd="$menucmd --tiebreak=index"
+}
+
+[[ "$@" == *"--qutebrowser"* ]] \
+        && qutebrowser=true
+
+function list-bookmarks()
+{
+    GREP_COLORS='fn=01;32:mt=01;34' \
+    grep --color=always -Zr . $bookmarkpath \
+	| sed -re "s:$bookmarkpath:B :" \
+        -e 's/\x0/\x0 :: \x0/'
+}
+
+function list-history()
+{
+    sqlite3 --list --separator $'\t' "$HOME/.local/unique/qutebrowser/history.sqlite" "select datetime(last_atime, 'unixepoch'), title, url from CompletionHistory order by last_atime desc;" \
+    | sed -e 's/^/H /' -e 's/\t/ :: /' -e 's/\t/\x0 :: \x0/'
+}
+
+($alsohist; list-bookmarks) \
+| TERMINAL_OPTIONS="$termopts" MENUCMD="$menucmd" dmenu \
+| {read query; read key; read output}
+
+if [[ $key == "alt-enter" ]]
+then
+    url=$(echo "$output" \
+        | cut --delimiter='' -f3 \
+        | tr -d "\n"
+    )
+else
+    # browser handles parsing url
+    url="$query"
+fi
+
+[[ -z "$url" ]] \
+    && exit
+
+[[ $qutebrowser == true ]] \
+    && printf '%s' "open $url" >> "$QUTE_FIFO" \
+    && exit
+
+$BROWSER "$url"

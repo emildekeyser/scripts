@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# nvim -c ":Man $@"
+
+col -b | nvim -R +":set ft=man" -

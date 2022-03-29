@@ -1,0 +1,6 @@
+#!/bin/bash
+
+paste --delimiters="\n" <(tac "$1") <(tac "$2") \
+| uniq \
+| grep -v '^$' \
+| tac

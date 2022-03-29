@@ -1,0 +1,1 @@
+find ~/.local/templates -maxdepth 1 -type f | MENUCMD='fzf --with-nth=-1 --delimiter=/' dmenu | xargs cat | xclip -selection "clipboard"

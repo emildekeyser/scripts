@@ -1,0 +1,9 @@
+#!/bin/bash
+
+sudo paccache -r
+
+find ~/.cache/yay -maxdepth 1 -type d | xargs --max-args=1 paccache -v -r -c
+
+sudo chown -R user1:user1 ~/.cache/yay
+chmod -R +r ~/.cache/yay
+find ~/.cache/yay | grep '\.deb$|\.zip$|\.tar.gz$|\.bundle$|\.rpm$|\.AppImage$' | xargs rm

@@ -1,15 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-[ -f "$HOME/.cache/wal/colors.sh" ] && . "$HOME/.cache/wal/colors.sh"
-
-pidof dunst && killall dunst
-
-dunst -lb  "${color0:-#eeeeee}" \
-      -lf  "${color1:-#ffffff}" \
-      -lfr "${color2:-#dddddd}" \
-      -nb  "${color0:-#bbbbbb}" \
-      -nf  "${color1:-#cccccc}" \
-      -nfr "${color2:-#aaaaaa}" \
-      -cb  "${color8:-#888888}" \
-      -cf  "${color6:-#999999}" \
-      -cfr "${color2:-#777777}" > /dev/null 2>&1 &
+source ~/.cache/wal/colors.sh
+killall dunst >/dev/null 2>&1
+printf "$(cat ~/.config/dunst.conf)\nbackground = \"$color0\"\nforeground = \"$color1\"" \
+    | dunst -config - \
+    >> ~/.local/log/dunst 2>&1

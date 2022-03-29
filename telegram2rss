@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+peer=$1
+
+telegram-cli \
+    --enable-msg-id \
+    --wait-dialog-list \
+    --disable-colors \
+    --disable-output \
+    --json \
+    --permanent-msg-ids \
+    --exec "history $peer 999999" \
+| head -1 \
+| sed -r 's/^.*\[/[/' \
+| jq '.[] | .date, .text' \
+| paste - - --delimiters=' ' \
+| awk '{printf strftime("%c",$1); $1="";print $0}' \
+| genrss

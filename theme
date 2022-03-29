@@ -1,48 +1,47 @@
 #!/bin/bash
 
-if [[ $1 = -R ]]
-then
-    wal -R
-    source ~/.cache/wal/colors.sh
-    bgs -R -C $color7 ~/.cache/wal/generated-wal1.png
-    colored-dunst
-    exit
-fi
+WALDIR="$HOME/.cache/wal"
 
-if [[ $1 = -p ]]
-then
-    theme=$(wal --theme \
-        | sed '/Dark Themes/,/Light Themes/ s/ - /dark:/;
-            /Light Themes/,/Extra/ s/ - /light:/' \
-        | head -n-4 \
-        | grep -Pv ':$' \
-        | cat - <(printf "random_dark\nrandom_light\n") \
-        | fzf \
-        | sed 's/dark://'
-    )
-elif [[ $1 = -l ]]
-then
-    theme=random_light
-else
-    theme=random_dark
-fi
+[[ $1 == -R ]] \
+    && wal -R
 
-[ -z $theme ] && exit
+[[ $1 == -I ]] && {
+    wal --iterative -i ~/pic/hyperborea
+    convert $(cat $WALDIR/wal) -bordercolor transparent -border 20%x20% $WALDIR/generated-wal1.png
+}
 
-if grep -Pq '^light:' <<< $theme
-then
-    theme=$(sed 's/light://' <<< $theme)
-    wal -l --theme $theme
-else
-    wal --theme $theme
-fi
+source $WALDIR/colors.sh
+bgs -R -C $color0 $WALDIR/generated-wal1.png
+pywal-zathura-colors > $WALDIR/colors-zathura
+setsid colored-dunst &
 
-pywal-zathura-colors > ~/.cache/wal/colors-zathura
+# if [[ $1 = -p ]]
+# then
+#     theme=$(wal --theme \
+#         | sed '/Dark Themes/,/Light Themes/ s/ - /dark:/;
+#             /Light Themes/,/Extra/ s/ - /light:/' \
+#         | head -n-4 \
+#         | grep -Pv ':$' \
+#         | cat - <(printf "random_dark\nrandom_light\n") \
+#         | fzf \
+#         | sed 's/dark://'
+#     )
+# elif [[ $1 = -l ]]
+# then
+#     theme=random_light
+# else
+#     theme=random_dark
+# fi
 
-source ~/.cache/wal/colors.sh
+# [ -z $theme ] && exit
 
-sed "s/green/$color7/ ; s/black/$color1/" ~/.config/wal/wallpaper-template.svg \
- | convert - ~/.cache/wal/generated-wal1.png
+# if grep -Pq '^light:' <<< $theme
+# then
+#     theme=$(sed 's/light://' <<< $theme)
+#     wal -l --theme $theme
+# else
+#     wal --theme $theme
+# fi
 
-bgs -R -C $color7 ~/.cache/wal/generated-wal1.png
-colored-dunst
+# sed "s/green/$color0/ ; s/black/$color1/" ~/.config/wal/wallpaper-template.svg \
+#  | convert - ~/.cache/wal/generated-wal1.png

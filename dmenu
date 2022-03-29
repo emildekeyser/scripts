@@ -1,19 +1,11 @@
 #!/bin/bash
 
-#RETARDED BULLSHIT:
-
-# inpipe=/tmp/fzf-dmenu-input-pipe
-# outpipe=/tmp/fzf-dmenu-output-pipe
-# rm -f $inpipe $outpipe
-# mkfifo $inpipe $outpipe
-
-# urxvt -title floating-terminal -e sh -c "fzf < $inpipe > $outpipe" &
-# while read l ; do
-#     echo $l > $inpipe
-# done
-
-# cat $outpipe
-
 exec 2>/dev/null
-TERMINAL_OPTIONS=${TERMINAL_OPTIONS:--t floater}
-$TERMINAL $TERMINAL_OPTIONS -e zsh -c "[[ -r ~/.cache/wal/sequences ]] && cat ~/.cache/wal/sequences; fzf $FZF_OPTIONS < /proc/$$/fd/0 > /proc/$$/fd/1"
+TERMINAL_OPTIONS=${TERMINAL_OPTIONS:- -t floater}
+MENUCMD=${MENUCMD:-fzf}
+
+$TERMINAL $TERMINAL_OPTIONS -e $SHELL --interactive -c "$MENUCMD < /proc/$$/fd/0 > /proc/$$/fd/1"
+
+# TODO
+# i3-msg -t get_workspaces | jq '.[] | select(.focused).rect | .width*0.90, .height*0.5, .x+.width*0.05, .y+.height*0.25' | xargs | read w h x y
+# xdotool search --name floater windowmove $x $y windowsize $w $h

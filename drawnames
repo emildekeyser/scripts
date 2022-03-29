@@ -1,0 +1,17 @@
+#!/bin/python
+
+import random
+namen = ,,,
+
+def P():
+    pairs = {}
+    for n in namen:
+        l = [nn for nn in namen if nn != n and nn not in pairs.values()]
+        pairs[n] = random.choice(l)
+    return pairs
+
+
+p = P()
+for k in p:
+    with open(k + '-geeft.txt', 'w') as f:
+        f.write(p[k])

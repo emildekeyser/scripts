@@ -13,8 +13,8 @@ password_files=( "$prefix"/**/*.gpg )
 password_files=( "${password_files[@]#"$prefix"/}" )
 password_files=( "${password_files[@]%.gpg}" )
 
-opts=" --history=$HOME/.local/history/fzf/pass --query='$(tail -1 $HOME/.local/history/fzf/pass)'"
-username=$(printf '%s\n' "${password_files[@]}" | FZF_OPTIONS="$opts" dmenu "$@")
+menu="fzf --history=$HOME/.local/history/fzf/pass --query='$(tail -1 $HOME/.local/history/fzf/pass)'"
+username=$(printf '%s\n' "${password_files[@]}" | MENUCMD="$menu" dmenu "$@")
 
 [[ -n $username ]] || exit
 

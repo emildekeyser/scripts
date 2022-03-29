@@ -1,7 +1,0 @@
-#!/usr/bin/python -u
-# EASY-INSTALL-DEV-SCRIPT: 'wif==0.1','wif'
-__requires__ = 'wif==0.1'
-__import__('pkg_resources').require('wif==0.1')
-__file__ = '/home/user1/project/ucll/2021-sem1/3D/wif/bin/wif'
-with open(__file__) as f:
-    exec(compile(f.read(), __file__, 'exec'))

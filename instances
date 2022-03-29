@@ -1,0 +1,31 @@
+#!/bin/bash
+
+path="$HOME/.local/instances"
+mkdir -p $path
+
+[[ $1 == invidious ]] && {
+    [[ $2 == --edit ]] && $EDITOR $path/invidious.txt && exit
+
+    # grep '^EU' ~/doc/countrycodes.txt | cut -d' ' -f 2 | xargs | tr ' ' '|'
+    # europe="AL|AD|AZ|AT|AM|BE|BA|BG|BY|HR|CY|CZ|DK|EE|FO|FI|AX|FR|GE|DE|GI|GR|VA|HU|IS|IE|IT|KZ|LV|LI|LT|LU|MT|MC|MD|ME|NL|NO|PL|PT|RO|RU|SM|RS|SK|SI|ES|SJ|SE|CH|TR|UA|MK|GB|GG|JE|IM"
+    apiurl="https://api.invidious.io/instances.json"
+    # jqcmd='.[] | .[1] | select( .region != null and (.region | test("'$europe'")) and .type == "https") | .uri'
+    jqcmd='.[] | .[1] | .uri'
+
+    curl -Ls $apiurl \
+    | jq "$jqcmd" \
+    | tr -d '"' \
+    | tee $path/invidious.txt
+
+    exit
+}
+
+[[ $1 == searx ]] && {
+    [[ $2 == --edit ]] && $EDITOR $path/searx.txt && exit
+
+    curl -Ls 'https://searx.space/data/instances.json' \
+    | jq '.instances | keys' \
+    | tee $path/searx.txt
+
+    exit
+}

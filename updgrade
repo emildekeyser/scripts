@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo '===>> Syu:'
+yay -Syu
+
+echo '===>> Update pkgfile db:'
+sudo pkgfile --update
+
+echo '===>> Prune caches:'
+paccache -v -r -k1 -c ~/.local/repo
+sudo chown -R user1:user1 ~/.cache/yay
+chmod -R +rwX ~/.cache/yay
+(find ~/.cache/yay -maxdepth 1 -type d | xargs --max-args=1 paccache -v -r -k2 -c ) | sort | uniq -c
+find ~/.cache/yay | grep '.deb$|.zip$|.tar.gz$|.bundle$|.rpm$' | xargs --no-run-if-empty rm
+sudo paccache -v -r
+
+echo '===>> Manual intervention needed:'
+sudo find /etc -name *.pacnew -or -name *.pacsave
+echo
+
+echo '===>> Package lists status:'
+make -C ~/project/jera-operating-system/v2/pkglists/

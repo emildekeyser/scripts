@@ -1,0 +1,19 @@
+#!/bin/bash
+
+[[ $1 == meta-pls ]] && {
+    make -C $HOME/music/library
+    exit
+}
+
+[[ $1 == check-li ]] && {
+    echo last import tag is correct ?
+    exit
+}
+
+[[ $1 == untag-li ]] && {
+    beet modify -y -a li! li:1
+    beet modify -y li! li:1
+    exit
+}
+
+beet list li:1

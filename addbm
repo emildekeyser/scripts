@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+existing=$(grep -rZ "$QUTE_URL" $HOME/.local/bookmarks | tr "\0" "\n" | head -1)
+if [[ -z "$existing" ]]
+then
+    filename=$(inline-detox -f ~/.config/detox/detoxrc <<< "$QUTE_TITLE")
+    echo $QUTE_URL > $HOME/.local/bookmarks/uns/$filename
+    notify-send "Added $filename to bookmarks"
+else
+    STARTUPRUNCMD="print -z mv $existing ./ $(basename $existing)" $TERMINAL -d $HOME/.local/bookmarks -t floater
+fi
+
+exit 0

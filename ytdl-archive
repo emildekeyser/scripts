@@ -1,10 +1,14 @@
 #!/bin/bash
 
 youtube-dl --download-archive archive.txt \
+    --prefer-free-formats \
 	--write-description \
     --write-thumbnail \
+    --embed-thumbnail \
     --add-metadata \
     --xattrs \
 	--ignore-errors \
 	-o '%(upload_date)s-%(title)s-%(id)s.%(ext)s' \
-	"$1"
+	"$@"
+
+find -type f | grep -P '\.f[0-9]{2,4}\.[a-z0-9]{2,5}$' | tr "\n" "\0" | xargs --no-run-if-empty --null rm

@@ -4,7 +4,7 @@ import cron_descriptor
 import fileinput
 
 for line in fileinput.input():
-    line = line.strip("\n")
+    line = ' '.join(line.split()[:5])
     try:
         print(cron_descriptor.get_description(line))
     except Exception as e:

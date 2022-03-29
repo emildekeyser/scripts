@@ -1,0 +1,36 @@
+#!/bin/bash
+
+[[ $1 == menu ]] \
+&& echo -e "songs\ncompilations\nchannels\nmusic-channels" | dmenu | xargs $0 \
+&& exit
+
+case $1 in
+
+    songs|compilations)
+        queuepath=$HOME/download/yt/$1/queue.txt
+        if grep -q "$QUTE_URL" $queuepath
+        then
+            notify-send "$QUTE_URL already found in $1/queue.txt"
+        else
+            echo "$QUTE_URL" >> $queuepath
+            notify-send "$QUTE_URL appended to $1/queue.txt"
+        fi
+        ;;
+
+    *channels) # channels or music-channels
+        downloader=ytdl-archive
+        [[ $1=music-channels ]] \
+            && downloader='ytdl-archive --extract-audio'
+        filename=$(inline-detox -f ~/.config/detox/detoxrc <<< "$QUTE_TITLE")
+        path=$HOME/download/yt/$1/$filename
+        if [[ -d $path ]]
+        then
+            notify-send "$1/$filename already exists"
+        else
+            mkdir $path
+            printf "dl:\n\t$downloader '$QUTE_URL'" > $path/Makefile
+            notify-send "Created $1/$filename with $downloader"
+        fi
+        ;;
+
+esac

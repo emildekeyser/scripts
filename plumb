@@ -1,7 +1,0 @@
-#!/bin/bash
-
-echo args: "$@"
-while read l
-do
-    echo $l
-done

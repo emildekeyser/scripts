@@ -5,7 +5,7 @@ cmd="mpv --audio-display=no --loop=inf --volume=300 $soundfile"
 
 if [[ "$@" == "" ]]
 then
-    echo $cmd | at 07:00
+    echo $cmd | at 06:00
 else
     echo $cmd | at $@
 fi

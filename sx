@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cat \
+| curl \
+    --get \
+    --data-urlencode 'format=rss' \
+    --data-urlencode 'engines=duckduckgo,startpage,qwant' \
+    --data-urlencode 'q@-' \
+    'https://zoek.anchel.nl/search' \
+| sfeed \
+| tr -s '\t' \
+| sed -e 's/^\t//' -e 's/\t/\n/g' 

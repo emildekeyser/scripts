@@ -1,0 +1,6 @@
+#!/bin/bash
+
+exec 2>/dev/null
+TERMINAL_OPTIONS=${TERMINAL_OPTIONS:- -t floater}
+MENUCMD=${MENUCMD:-'broot --conf "$HOME/.config/broot/conf.hjson;$HOME/.config/broot/bmenu.hjson;$HOME/.config/broot/skin.hjson"'}
+$TERMINAL $TERMINAL_OPTIONS -e zsh --interactive -c "$MENUCMD > /proc/$$/fd/1"
